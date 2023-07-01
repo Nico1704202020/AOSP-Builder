@@ -1,18 +1,18 @@
 env:
-    MANIFEST: https://github.com/PixelExperience/manifest.git -b eleven-plus
-    DEVICE: miatoll
-    OEM: xiaomi
-    DT_LINK: https://github.com/PixelExperience-Devices/device_xiaomi_miatoll.git
+    #MANIFEST: https://github.com/PixelExperience/manifest.git -b eleven-plus
+    DEVICE: p3s
+    OEM: samsung
+    DT_LINK: https://github.com/Nico17042020/android_device_samsung_p3s.git
     DT_PATH: device/$OEM/$DEVICE
-    VT_LINK: https://gitlab.pixelexperience.org/android/vendor-blobs/vendor_xiaomi_miatoll.git
+    VT_LINK: https://github.com/Nico17042020/proprietary_vendor_samsung_p3s.git
     VT_PATH: vendor/$OEM/$DEVICE
-    KT_LINK: https://github.com/ArrowOS-Devices/android_kernel_xiaomi_sm6250.git
-    PLATFORM: sm6250
+    KT_LINK: https://github.com/Exy2100-LOS/android_kernel_samsung_universal2100.git
+    PLATFORM: EWAF
     KT_PATH: kernel/$OEM/$PLATFORM
-    TARGET: bacon
-    EXTRA_CMD: export SKIP_ABI_CHECKS=true
-    LUNCH_COMBO: aosp_${DEVICE}-userdebug
-    OUTPUT: PixelExperience*.zip
+    TARGET: p3s
+    EXTRA_CMD: 
+    LUNCH_COMBO: lineage_${DEVICE}-userdebug
+    OUTPUT: lineage*.zip
 
 task:
   name: "Setting Up, Syncing, Building and Uploading..."
@@ -33,9 +33,9 @@ task:
       - echo "============================"
       - echo "Syncing The Sources..."
       - echo "============================"
-      - mkdir -p ~/work
-      - cd ~/work
-      - repo init --depth=1 -u $MANIFEST
+      - mkdir -p ~/los
+      - cd ~/los
+      - repo init -u https://github.com/LineageOS/android.git -b lineage-20.0 --git-lfs --depth=1 
       - repo sync -j4 --force-sync --no-tags --no-clone-bundle
       - git clone $DT_LINK $DT_PATH
       - git clone $VT_LINK $VT_PATH
@@ -48,20 +48,21 @@ task:
       - echo "============================"
       - echo "Starting the Build..."
       - echo "============================"
-      - cd ~/work
+      - cd ~/los
       - $EXTRA_CMD
       - export USE_CCACHE=1
       - export CCACHE_EXEC=/usr/bin/ccache
       - ccache -M 50G
-      - . build/envsetup.sh
-      - lunch "$LUNCH_COMBO"
-      - mka -j31 $TARGET
+      - source build/envsetup.sh
+      - breakfast p3s
+      - croot
+      - brunch p3s
      
   Upload_script:
       - echo "============================"
       - echo "Uploading the Build..."
       - echo "============================"
-      - cd ~/work
+      - cd ~/los
       - cd out/target/product/"$DEVICE"
       - ls -lh
       - pwd
