@@ -1,5 +1,4 @@
 env:
-    #MANIFEST: https://github.com/PixelExperience/manifest.git -b eleven-plus
     DEVICE: p3s
     OEM: samsung
     DT_LINK: https://github.com/Nico17042020/android_device_samsung_p3s.git
